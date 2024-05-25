@@ -1,0 +1,156 @@
+R1. 알파벳 중복없이 정렬해서 출력하는 코드 보내기 (파일 명 grades 주어짐)
+ : cut -f1 grades | sort | uniq -c | sort -nr | grep -v "1"
+
+R2. sort vs sort -n (1,11,111,2)
+- sort : 1, 11, 111, 2
+ (비슷한 것끼리 먼저 나열)
+- sort -n : 1, 2, 11, 111
+ (수의 단위대로 나열)
+
+Q1. 파일 아무거나 열어서 수정하고 저장하고 나오기   
+ : set -o vi
+   vi 파일명
+   Esc 
+   입력모드 -i : 현 커서에서 입력
+          -a : 현 커서의 한 칸 뒤에서 입력
+          -o : 한줄 추가 후 입력
+  Esc
+  :q!
+
+Q2. Linux에서 짝수로 끝나는 모든 파일 (파일 매칭, 와일드 카드)
+ : grep Linux ch*[02468]
+
+Q3. Linux에서 대문자로 시작하고, 언더스코어 포함되어 있는 파이썬 파일 매칭
+ : grep Linux ch[A-Z]*_*.py
+
+Q4. /etc 디렉터리 안에 파일 확장자가 .conf인 파일 목록 조회하기
+ : ls -l /etc/*.conf or ls -l /etc *.conf
+
+Q5. age라는 변수에 자신의 나이를 담고 "내 나이는 ...살이다" 변수를 이용해서 출력한다.
+ : age=23
+  $echo my age is $age
+
+Q6. mv <from> <to> 를 
+ - 변수에 담아서 이동시키려면?
+  : dir1=mammals/*.txt
+    mv dir1 replites
+
+ - 패턴 매칭으로 이동시키려면?
+  : mv mammals/*.txt replites
+
+Q7. 새로운 파일(sample.txt)이 생성되었을 때, 이 파일을 커밋하는 한 묶음의 코드를 작성하시오. -> add 메세지
+ : git status 
+   git add sample.txt
+   git commit -m "done"
+
+  - if 모든 파일은 ?
+   : git status
+     git add .
+     git commit -m "done"
+
+Q8. 명령어로 다음 디렉터리를 구현하시오.
+ - 현재 위치 = company
+ - 노란 바탕의 'Folders'에 해당하는 부분을 구현한다.
+  -> root : company
+  -> 상위 디렉터리(2), 하위디렉터리(2), 폴더(2)
+  : mkdir "Department X" "Department Y" "Shared infrastructure"
+    cd "Department Y"
+    mkdir "Team A" "Team B"
+    cd "Team B"
+    mkdir "Product A" "Product B"
+
+ Q9./etc/passwd 디렉터리에서 로그인하지 않은 경우의 갯수를 구하는 코드를 작성하시오
+ daemon:x:1:1:daemon:/usr/sbin:/usur/sbin/nologin
+ : grep nologin /etc/passwd | wc -l
+
+Q10. /usr/lib에서 파일의 개수를 알아내는 코드를 작성하시오
+ : ls -l /usr/lib | cut -f1 | grep -v d | wc -l
+
+Q11. grades에서 파일의 개수를 알아내는 코드를 작성하시오
+grades 파일에서 이름의 마지막 글자만 추출했을 때 알파벳의 중복 개수를 세는 코드를 작성하시오
+ C Geraldine
+ B Carmine
+ A Kayla
+ A Sophia
+ : cut -f2 grades| rev | cut -c1 | sort | uniq -c | sort -nr 
+
+Q11. 현재 디렉터리에서 100개의 .jpg파일이 존재한다고 가정하자. 이 중 중복된 파일이 있는 지 확인하는 코드를 작성하라.(md5sum 프로그램을 활용할 수 있음)
+ -> 많은 개수의 중복된 파일 확인하기 -> 체크섬 이용
+: md5sum *.jpg | cut -c1-32 | sort | uniq -c | sort -nr | grep -v "1"
+
+Q12.sample.txt의 1번째 필드를 출력하되, 마지막 두글자만 출력하시오
+- sample.txt예시 : python Programming Python 2010 Lutz,Mark
+- 출력 값 예시 : on
+: cut -f1 sample.txt | rev | cut -c-2 | rev
+
+Q13. git 명령어
+ - 버전 체크
+  : git --version
+ - 깃 초기화
+  : git init
+ - 상태 체크 
+  : git status
+
+Q14. 디렉터리 명령어
+ - 상위 디렉터리
+  : ..
+ - 현재 디렉터리
+  : .
+ - 루트
+  : /
+ - (현재위치)변경
+  : cd
+ - 복사
+  : cp
+ - (파일저장위치)이동 
+  : mv
+ - 현재 작업중인 디렉터리의 절대 경로 출력
+  : pwd
+ - 디렉터리 생성
+  : mkdir
+ - 디렉터리 삭제
+  : rmdir
+
+Q15. 명령어
+ - 체크섬
+  : md5sum
+ - 파일 매칭만 할때 (와일듵카드) 
+  : grep Linux chapter ~
+ - 페이지 단위로 출력
+  : less
+ - 파일 안에서 중복된 내용을 제거하고 보여줌
+  : uniq
+ - 파일 안에서 중복된 것을 수로 나타내줌
+  : uniq -c
+
+Q16. 정리
+ - 프롬프트
+  : 명령을 실행하는 곳
+ - 셸
+  : 사용자와 리눅스 운영체제를 연결해주는 매개체
+ - 파일 매칭
+  : 셸이 패턴 매칭을 처리하여 결과물을 프로그램으로 보냄
+ - 와일드 카드의 종류
+  1. * (애스크리스크) 
+   : 파일이나 디렉터리 경로에서 0개 이상의 연속열과 일치하는 것으로 간주
+  2. ? (물음표)
+   : 한 글자와 일치하는 것으로 간주
+  3. [] (대괄호,각괄호)
+   : 괄호 안에 열거 되어 있는 것 중 일치하는 하나의 문자열로 간주
+- 변수
+ : 변수를 리터럴 값으로 치환하여 값을 평가함
+- 별명
+ : 단축어를 별명으로 설정 
+ : 인수는 무조건 큰따옴표 쓰셈
+ $alias g="ls -l"
+- 별명 명령어
+ 1. 셸 인스턴스의 모든 별명과 그것에 대한 값 확인 alias
+ 2. 특정한 별명과 그 값 확인 alias 별명
+ 3. 정의된 별명 제거 unalias 제거할 별명
+
+Q17. 주의사항
+- 확인만 하는 거면 굳이 cut 하지마셈
+- 파일인지 디렉터리인지 잘 보기 (디렉터리 아니면 다 파일 : grep -v d사용해서 파일 찾기)
+- sort | uniq -c는 항상 세트
+- 보여주면 딱 그것만 있는 것임
+- 마지막으로 볼 때, 철자, 파일명 다시 보기!!

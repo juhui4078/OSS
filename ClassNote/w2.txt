@@ -1,0 +1,167 @@
+4) grep
+- matching
+- 대소문자 구분함
+- 라인 전체를 출력한다.
+Q. The가 있는 txt파일을 전체 조회하라: +
+- -v : 조건 문자열이 없는 라인 출력
+
+Q1. /usr/lib에 포함된 하위 디렉터리 개수 알아내기
+ls -ls /usr/lib | cut -c1 | grep d
+ls -l /usr/lib | cut -c1 | grep d
+
+5) sort
+- 정렬, 오름차순 (abcd..)
+- r (reversed)
+- 숫자 정렬 (-n)
+ sort -n -r sample.txt
+ sort -nr sample.txt
+
+Q2. animals.txt 3번째 필드가 숫자 ==> 오름차순 정렬해서 출력하기 
+cut -f3 aniamls.txt | sort 
+
+Q3. 최솟값, 최댓값 출력하기
+cut -f3 animals.txt | sort -n | head -n1
+cut -f3 animals.txt | sort -nr | head -n1
+
+Q4. /etc/passwd 디렉터리에서 사용자 이름 정렬하여(오름차순) 추출하기
+(ls -l로 디렉터리 안의 내용을 나열하니, 한 줄만 나와서 head를 사용함)
+head /etc/passwd | cut -d: -f1 | sort
+- :로 구분된 필드 중 1번째 == 사용자
+if 디렉터리 안의 내용 중 1번째 필드를 저체로 출력하고 싶을 땐?
+(전체의 개수보다 많이 출력하여 전체 다 출력되게 해주기)
+head -n1000 /etc/passwd | cut -d: -f1
+
+Q5. 사용자 중 root가 있는 지 확인하기 (존재하는 라인만 출력하거나 개수 세기) 
+* 주의 grep는 대소문자 구분함 
+head /etc/passwd | cut -d: -f1 | grep root
+- _root_ => -w (문자가 아닌 기호와 함께 문자가 있을 떄, 문자만 인식하게 해주는 역할)
+(head에서 나가고 싶을 땐, control c 누르기)
+(grep하고 찾고 싶은 단어를 쓸 때에는 대쉬(-)없이 그냥 그 단어 띄어서 바로 써주기)
+
+# letters 내용 조회하기
+6) uniq
+- 중복된 문자열을 제거해서 보여주되, 인접한 중복 문자열만 
+- 옵션 '-c'는 한 문자가 얼마나 중복되어 있는 지 알려줌
+
+Q6. 성적표 (grades 파일)에서 가장 빈번하지 않은 등급부터 출력하기.
+cut -f1 grades | sort -r | uniq -c | sort -n
+
+#AAACCCCBBBAAA
+* sort -> uniq
+AAAAAABBBCCCC -> ABC
+* uniq -> sort
+ACBA -> AABC
+
+# sort -n == sort (왜 숫자로 설정안해도 숫자로 인식할까)
+*sort-n
+1 C
+2 A
+* sort
+1 C
+
+----------------------
+#1. 버전 관리
+- 파일의 변화를 시간에 따라 저장했다가 나중에 특정 시점의 버전으로 다시 꺼내올 수 있는 시스템
+- 협업할때, 어떤 사람이 실수해도 ㄱㅊ, 나도 빌드업 가능
+- 틀 : 깃
+
+#2. 깃
+- 데이터 저장 방식 : 스냅샷을 찍듯이 데이터를 저장한다 (좀 더 단위가 작음->메모리가 적고, 속도가 빠름)
+- 네트워크가 따로 필요 없어서 오프라인으로 저장 가능
+ - if 빈 -> 텍스트 입력
+ - 키(key)-벨류(value)
+  - 키는 고유하다. (해시)
+  - 벨류 (텍스트)
+
+- 깃 상태
+ - 수정: 어떠한 파일이 변경된 상태
+ - 커밋: 저장 
+ - 스테이지: 스냅샷을 찍어서 커밋할 준비를 하는 것
+
+ - 수정 
+ - 스테이징 -> 커밋
+
+- 깃 커밋 순서:
+ 상태 체크 -> (수정) -> 스테이징 -> 커밋
+ (지금 replit에는 깃이 설치되어 있음)
+ .....
+
+1) 버전 체크
+git --version
+ * git -v --version
+ ls -l
+ ls --list (x)
+
+2) 사용자 정보
+- name
+- email
+- 옵션: --global: 전체 시스템에 영향을 준다.
+ - 프로젝트마다 다른 이름을 사용하고 싶을 경우는 옵션을 제외함
+
+- core.editor
+ - vi 빠져나올 때는 :q + enter
+
+- git help <프로그램명>
+
+# 디렉터리
+- 현재 디렉터리를 지칭하는 말 : working directory, current directory
+- 우리가 말하는 "폴더"
+- 리눅스에서는 트리구조를 가진
+ animals/
+   name.txt
+   age.txt
+   mammals/
+    cow.txt
+
+- 하위 디렉터리 (child) - animals > mammals
+  name.txt -> 파일
+- 상위 디렉터리 (parent) - mammals > animals
+- 형제 디렉터리 (sibling) - mammals, reptile
+- /로 구분함
+ animals/mammals/cow.txt
+ <디렉터리 / .... / 파일명>
+- / : 루트 디렉터리
+- 절대경로 : 루트에서부터 시작
+- 상대경로 : 현재 기준
+  - 나의 현재 위치가 mammals이다. 근데 위로 가고싶다.
+   1) 절대경로 : / ...../mammals
+   2) 상대경로 : 
+     .. : 부모 디렉터리
+      . : 현재
+- cd : change directory
+
+
+  예: cd ./mammals (밑으로 가겠다)
+    cd.. (위로 가겠다)
+
+- pwd, cd
+- .. .
+- mkdir
+
+Q7. new_dir로 이동해서 디렉터리 "dir2 만들어보기"
+cd new_dir
+mkdirt dir2
+ls
+cd ..
+ls
+replit.nix
+
+
+3) 깃 초기화
+ git init: .git에 모든 변경사항(스냅샷)이 저장이 된다.
+
+4) 상태 체크
+ git status 
+
+ 깃이 모르는 파일일 경우
+ untracked -> 'add' -> tracked
+
+ add -> commit
+
+ [main (root-commit) f37dfle] init commit
+  1 file changed, 7 insertions(+)
+  create mode 100644 animals.txt
+
+  - branch 정보: main
+  - f37df1e - 키정보
+  - init commit - 메세지

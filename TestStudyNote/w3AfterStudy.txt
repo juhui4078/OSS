@@ -1,0 +1,69 @@
+Q1. The가 있는 txt파일을 전체 조회하라
+ : grep The *.txt
+ - The가 없는 txt파일은?
+  : grep -v The *.txt
+
+Q2. /usr/lib에 포함된 하위 디렉터리 개수 알아내기
+ ls -l /usrt/lib | cut -f1 | greb d | wc -l
+
+Q3. animals.txt 3번째 필드가 숫자 ==> 오름차순 정렬해서 출력하기
+ : cut -f3 animals.txt | sort -n
+ - 내림차순은? 
+  : cut -f3 animals.txt | sort -nr
+
+Q4. animals.txt 3번째 필드가 숫자 ==> 최솟값, 최댓값 출력하기
+ - 최솟값 
+  : cut -f3 animals.txt | sort -n | head -n1
+ - 최댓값
+  : cut -f3 aniamls.txt | sort -nr | head -n1
+
+Q5. /etc/passwd 디렉터리에서 사용자 이름 정렬하여(오름차순) 추출하기
+ : head /etc/passwd | cut -d: -f1 | sort
+
+- if 디렉터리 안의 내용 중 1번째 필드를 저체로 출력하고 싶을 땐?
+ : head /etc/passwd | cut -d: f1
+
+Q6. 사용자 중 root가 있는 지 확인하기 (존재하는 라인만 출력하거나 개수 세기) 
+ - 라인만 출력하기
+  : head /etc/passwd | cut -d: f1 | grep root 
+ - 개수 세기 
+  : head /etc/passwd | cut -d: f1 | grep root | wc -l
+
+Q7. 성적표 (grades 파일)에서 가장 빈번하지 않은 등급부터 출력하기.
+ : head grades | cut -f1 | sort | uniq -c | sort -n
+ - 가장 빈번한 등급부터 출력한다면? 
+  : head grades | cut -f1 | sort | uniq -c | sort -nr
+
+Q8. new_dir로 이동해서 디렉터리 "dir2 만들어보기" (무조건 이동과 생성을 따로 해야함)
+ : cd new_dir 
+  mkdir dir2
+
+Q9. 첫번째 열의 맨 마지막 문장의 맨 마지막 두글자 출력하기
+ : head /etc/passwd | cut -d: f1 | rev | cut -c1-2 | rev | tail -n1
+
+Q10. 깃 버전 체크
+ : git --version
+
+Q11. 깃 초기화
+ : git init 
+ - .git에 모든 변경사항(스냅샷)이 저장된다
+
+Q12. 깃 상태 체크 
+ : git status
+Q13. 깃 이란?
+ : 소스코드를 관리하기 위한 분산 버전 관리
+
+Q14. 버전이란?
+ : 파일의 변화를 시간 단위로 저장하여 나중에 특정 시점의 버전을 꺼내올 수 있도록 하는 system
+
+Q15. 깃의 장점
+ : 같은 소스코드를 동시에 여러명이 수정할 수 있다
+ : 배포된 버전이 문제가 있으면 바로 이전 버전으로 돌아갈 수 있다
+ : 소스 코드의 충돌을 확인할 수 있다
+ : 변경 이력을 쉽게 확인할 수 있다
+ : 소스 변경의 이력을 추적할 수 있다 
+
+Q16. 버전의 장점
+ : 분산 업무를 효율적으로 할 수 있다
+ : 실수를 해도 이전 버전으로 돌아갈 수 있으므로 위험성이 적다
+ : 빌드업 할 수 있다

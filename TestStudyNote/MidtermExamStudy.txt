@@ -1,0 +1,438 @@
+Q1. /bin에 존재하는 파일 내용을 라인별로 한 화면에 나타도록 출력하는 명령은?
+ : ls -l /bin | less
+
+Q2. 현재 디렉터리에 존재하는 파일과 디렉토리 수를 출력하시오.
+ : ls -l | grep -v 'd' | wc -l
+ ***인수를 설정하지 않는 이상 ls의 디폴트 값은 현재 디렉토리임
+
+Q3. /bin에 존재하는 파일과 하위 디렉토리 중 처음 5개만 골라 앞 글자만 출력하시오
+ : ls /bin | head -n5 | cut -c1
+ (이것도 너무 애매함 시발)
+ (파일이랑 디렉토리 존나 헷갈리게 말하심)
+
+--------------------------------------
+
+Q1. The가 있는 txt파일(이름)을 전체 조회하라
+ : ls | grep *'The'*.txt
+
+Q2. /usr/lib에 포함된 하위 디렉터리 개수 알아내기
+ : ls -l /usur/lib | cut -c1 | grep -v 'd' | wc -l
+ ***cut -c1 까먹지 말아라^^
+
+Q3. animals.txt 3번째 필드가 숫자 ==> 오름차순 정렬해서 출력하기
+ : : cut -f3 animals.txt | sort -n
+- 내림차순은? 
+ : cut -f3 animals.txt | sort -nr
+**** 숫자인지 아닌지 항상 확인!!!! -r(내림 차순)
+
+Q4. animals.txt 3번째 필드가 숫자 ==> 최솟값, 최댓값 출력하기
+- 최솟값
+ : cut -f3 animals.txt | sort -n | head -n1
+
+- 최댓값
+ : cut -f3 animals.txt | sort -nr | head -n2
+
+Q5. /etc/passwd 디렉터리에서 사용자 이름 정렬하여(오름차순) 추출하기
+ : head /etc/passwd | cut -d: -f1 | sort
+
+Q6. 사용자 중 root가 있는 지 확인하기 (존재하는 라인만 출력하거나 개수 세기) 
+ : head /etc/passwd | cut -d: -f1 | grep 'root'
+
+Q7. 성적표 (grades 파일)에서 가장 빈번하지 않은 등급부터 출력하기.
+ : cut -f1 grades | sort | uniq -c | sort -n
+ *** uniq 사용 후 정렬할 땐 무조건 -n 옵션 붙여야함 숫자기 때문
+
+Q8. new_dir로 이동해서 디렉터리 "dir2 만들어보기" (무조건 이동과 생성을 따로 해야함)
+ : cd new_dir
+ : mkdir dir2
+ ****cp는 복사, cd는 이동
+
+Q9. 첫번째 열의 맨 마지막 문장의 맨 마지막 두글자 출력하기
+ : head /etc/passwd | cut -d: -f1 | tail -n1 | rev | cut -c1-c2 | rev
+
+Q10. 파일을 commit한 상태로 만들기 (파일명 file)
+ : git status
+ : git add file
+ : git commit -m "done"
+
+---------------------------------- 
+
+R1. 알파벳 중복없이 정렬해서 출력하는 코드 보내기 (파일 명 grades 주어짐)
+ : cut -f1 grades | sort | uniq -c | sort
+
+R2. sort vs sort -n (1,11,111,2)
+ : sort -> 1, 11, 111, 2
+ : sort -n -> 1, 2, 11, 111
+
+Q2. Linux에서 짝수로 끝나는 모든 파일 (파일 매칭, 와일드 카드)
+ : grep Linux *[02468]
+
+Q3. Linux에서 대문자로 시작하고, 언더스코어 포함되어 있는 파이썬 파일 매칭
+ : grep Linux [A-Z]*_*.py
+
+Q4. /etc 디렉터리 안에 파일 확장자가 .conf인 파일 목록 조회하기
+ : ls -l /etc/*.conf
+ ****목록 조회는 ls로 해결가능
+ ls 사용한 뒤, 파일이나 하위디렉토리는 바로 경로에 쓰기
+
+Q5. age라는 변수에 자신의 나이를 담고 "내 나이는 ...살이다" 변수를 이용해서 출력한다.
+ : age=23
+ echo my age is $age
+
+Q6. mv <from> <to> 를 
+***grep을 사용하지 않고 경로로 바로 이동 가능
+
+ - 변수에 담아서 이동시키려면?
+ file=mammals/*.txt
+ mv file S
+ - 패턴 매칭으로 이동시키려면?
+ mv mammals/*.txt S
+
+***grep과 패턴매칭이 항상 세트는 아니란 말임
+***패턴 매칭은 grep과 사용할 수도 있고, 아니면 경로에 바로 사용가능
+(특히, 목록 조회나 이동시킬 때!)
+
+Q7. 새로운 파일(sample.txt)이 생성되었을 때, 이 파일을 커밋하는 한 묶음의 코드를 작성하시오.
+ : git status 
+   git sample.txt
+   git commit -m "done"
+
+Q8. 명령어로 다음 디렉터리를 구현하시오.
+ - 현재 위치 = company (root)
+ - 노란 바탕의 'Folders'에 해당하는 부분을 구현한다.
+  : mkdir "Department X" "Department Y" "Shared Infrastructure"
+  : cd "Department Y"
+  : mkdir "Team A" "Team B"
+  : cd "Team B"
+  : mkdir "Product1" "Product 2"
+
+Q9./etc/passwd 디렉터리에서 로그인하지 않은 경우의 갯수를 구하는 코드를 작성하시오
+daemon:x:1:1:daemon:/usr/sbin:/usur/sbin/nologin
+ : grep 'nologin' /etc/passwd | wc -l
+
+Q10. /usr/lib에서 파일*의 개수를 알아내는 코드를 작성하시오
+ : ls -l /usr/lib | cut -c1 | grep -v 'd' | wc -l
+
+Q11. grades에서 파일의 개수를 알아내는 코드를 작성하시오
+ : ls -l grades | cut -c1 | grep -v 'd' | wc -l
+
+grades 파일에서 이름의 마지막 글자만 추출했을 때 알파벳의 중복 개수를 세는 코드를 작성하시오
+   C Geraldine
+   B Carmine
+   A Kayla
+   A Sophia
+: cut -f2 grades | rev | cut -c1 | sort | uniq -c 
+
+Q11. 현재 디렉터리에서 100개의 .jpg파일이 존재한다고 가정하자. 이 중 중복된 파일이 있는 지 확인하는 코드를 작성하라.(md5sum 프로그램을 활용할 수 있음)
+ : md5sum *.jpg | cut -c1-32 | sort | uniq -c | sort -nr | grep -v "1"
+
+Q12.sample.txt의 1번째 필드를 출력하되, 마지막 두글자만 출력하시오
+ - sample.txt예시 : python Programming Python 2010 Lutz,Mark
+ - 출력 값 예시 : on
+ : cut -f1 sample.txt | rev | cut -c1-2 | rev
+
+----------------------------------------
+
+Q1. animals.txt에서 4번째 필드인 저자명 중 이름만(성 제외) 모두 출력하시오.
+  - 텍스트 예시 : python ProgrammingPython 2010 Lutz, mark
+  - 정답 예시 : mark
+  : cut -f4 animals.txt | cut -d, -f2
+
+Q3. 변수 USER 값을 출력하시오. 
+ : echo $USER
+ : printenv USER
+
+Q5. 숫자를 기준으로 내림차순하는 명령을 단축하는 코드를 작성하시오.
+ : alias sort="sort -nr" 
+ ***변수인지 별명 설정인지 잘 보기 
+ ***단축 코드 == 별명!!
+  별명은 alias 쓰고 해야함!!!
+
+Q6. 다음에 주어진 디렉터리에서, 현재 디렉터리를 Team A라고 가정할 때, Product2를 자주 사용하는 디렉터리로 저장(변수설정)하는 코드를 작성하고 그 디렉터리로 이동하시오.
+ : product2="~/Company/Department Y/Team B/Product B"
+   cd $product2
+
+Q8. 짝수로 끝나는 .jpg파일 중 모음으로 시작하는 파일을 고르는(ls) 명령을 작성하시오.
+ : ls -l [aeiou]*[02468].jpg
+
+Q12. /usr/lib에서 파일의 개수를 알아내는 코드를 작성하시오.
+ : ls -l /usr/lib | cut -c1 | grep -v 'd' | wc -l
+
+Q13. grades 파일에서 이름의 마지막 글자만 추출했을 때 각 알파벳의 중복 개수를 세는 코드를 작성하시오.
+      C Geraldine
+      B Carmine
+      A Kayla
+      A Sophia
+      B Haresh
+      C Liam
+      B Elijah
+      B Emma
+      A Olivia
+      D Noah
+ : cut -f2 grades | rev | cut -c1 | sort | uniq -c | sort -n 
+
+------------------------------------------------------
+
+Q1. animals.txt에서 Perl 라인의 글자(character) 수 세고 결과를 파일로 (result). 입력도 리다이렉션 (한번에)
+: grep 'Perl' < animals.txt | wc -c > result
+
+Q2. 히스토리를 가장 처음부터 10개 출력하기 (1-10)
+ : history | head -n1-10
+
+****일반 히스토리 가장 최근 명령부터 세는 것을 시작하므로, 처음부터 세는 것은 head 필요 (history, history(숫자))
+****확장 명령은 해당 지점 (!(숫자)(명령어),  )
+**** 명령어 검색은 히스토리 확장!!!!!!!!!
+
+Q3. 전체 히스토리 중 echo만 출력
+ : history | grep 'echo'
+
+ **** !echo (가장 최근의 echo만 출력함)
+ **** 히스토리 확장은 한개만 출력 되므로, 결과 값이 여러개인지 한개인지 구분 잘하기 
+
+
+Q4. 이전 명령의 단어(word) 수 세기 (표현식 많음)
+!! | wc -w
+
+----------------------------------------
+
+Q1. OSS에서 notes/b를 현재 디렉토리로 복사해서 가져오는 코드 작성하기
+(pwd)
+ runner
+ ㄴOSS
+  ㄴnotes
+   ㄴb
+: cp ./OSS/notes/b . (현재기준)
+
+***** 파일 복사 명령어 cp
+
+Q2. notes에서 runner로 한번에 가는 방법
+: cd ../..
+
+Q3. t가 들어있는 모든 파일명
+: grep -l *t* 
+: ls -l | grep *t* | cut -c1 | grep -v 'd'
+if 디렉토리
+: grep -l *t*
+
+Q4. 한 글자의 파일명, 두 글자의 파일명을 매칭하는 방법은?
+: echo ? /  grep ?
+: echo ?? / grep ??
+
+Q5. o를 제외한 모든 소문자
+: [a-np-z]
+
+Q6. 'who are you?'라는 디렉토리를 생성하고 목록 조회하는 코드 (세가지 Escape 모두 사용해서 만들기)
+: mkdir "who are you?"
+  ls -l "who are you?"
+: mkdir 'who are you'
+  ls -l 'who are you?'
+: mkdir who\ are\ you?
+  ls -l who\ are\ you?
+*** 뒤에 기능을 무효화 시키는 것은 역슬래쉬인 것을 잊지 않기!!
+
+Q7. 10번째 글자부터 끝까지
+: cut -c10-
+
+Q8. 전체 파일에서 *패턴 가진 것 찾기
+ : grep /'*'*
+
+Q9. 해당 매칭(A)이 있는 파일 개수 
+ : grep *A* | wc -l 
+
+Q10. animals.txt에서 e를 x로 바꾸고 싶을땐? (덮어 씌우기)
+ ***tr은 파일 내용이다, 입력 리다이렉션!!!
+  : tr 'e' 'x' < aniamals.txt
+
+Q11. animals.txt에서 소문자를 대문자로 바꾸고 싶을땐?
+  : tr [a-z] [A-Z] < animals.txt
+
+--------------------------------------
+
+Q1. 최근 15개 명령 히스토리를 history15에 저장하는 커맨드라인을 작성하라
+  : history 15 > history15
+
+Q2. 파일을 삭제할 때 재확인 하는 프로세스를 rm으로 지정하는 커맨드라인을 작성하라
+ : rm="rm -i"
+
+Q3. 이전 명령의 글자 수를 세어라
+ : !! | wc -c
+
+Q4. 14번 명령 히스토리를 읽는 방법은?
+ : !14
+ *** history 명령은 띄어쓰기, 확장은 띄어쓰기 아님
+
+Q5. 명령 히스토리에서 동일한 명령이 한번만 저장되도록 하려면?
+ : HISTCONTROL=ignoredups
+
+Q6. 명령 히스토리를 1000개 저장하도록 커맨드라인을 작성하라
+ : HISTSIZE=1000
+
+Q7. 파일이 classA,classB,...,classN까지 존재하고 파일에는 각 반의 학생 명ㄷ단이 있다고 가정하자. 전체 학생 명단을 담은 student_list파일을 생성하는 명령을 작성하라
+ : cat class* >> student_list
+
+Q8. 셸 초기화 파일의 전체 디렉토리를 쓰시오
+ : ~/.bashrc
+
+Q9. 디렉토리명이 다음과 같다 "how are tou?" 이 디렉토리를 조회하는 커맨드라인을 작성하라
+ : ls "how are you?"
+
+Q10. 명령 히스토리에서 echo 명령만 골라 횟수를 세고 결과를 cd_history.txt.에 저장하라
+ : history | grep 'echo' | wc -l > cd_history.txt.
+
+ ---------------------
+
+   1) a-f까지 매칭 (정규 표현식을 이용한 패턴 매칭)
+
+    2) b나 ab 매칭 ## or을 사용해야하는가?
+
+    3) 2번 + aaaaaab매칭 #100개
+
+    4) 모든 글자 매칭
+
+    5) #으로 시작하는 문장 매칭
+
+    6) \으로 끝나는 문장 매칭
+
+    7) 대문자로 시작하지 않는 문장 매칭
+
+    8) 빈줄이 아닌 모든 줄 매칭
+
+    9) cookie나 cake 포함된 줄 매칭
+
+    10) w. 매칭
+
+ Q2. 모든 파일의 내용에서 모음을 지우기 
+ : sed -i '1,$/[aeiou]//g' | ls -l | grep -v 'd'
+ ****대체 하는 것은 s
+
+ Q3. animals.txt에서 phython -> PYTHON 변경 후 파일 전체 동일한 이름으로 저장하기=덮어씌우기
+
+ : sed -i '1,$s/python/PYTHON/g' animals.txt 
+ : tr 'python' 'PYTHON' < animals.txt
+
+ ***파일 내용 변경 sed의 s or tr  (tr은 입력 리다이렉션만 가능)
+ ***파일 이름 변경 mv (서로 다른 디렉토리)
+
+ Q4. hello -> world (파일 명 : file)
+
+ sed -i '1,$s/hello/world/g' file
+ tr 'hello' 'world' < file (치환 후 file에 저장하라면 이게 맞는 듯)
+
+ < : 덮어쓰기
+ << : 뒤에 이어서 쓰기
+
+
+ Q5. python이 있는 라인만 출력해줘  
+ sed -n '/python/p' file
+
+ Q6. input_file에서 python으로 시작하는 라인 삭제하고, hello->world로 변경한 뒤, out_file에 저장하라
+ : sed -i '/python/d' ; sed -i '1,$s/hello/world/g' input_file > out_file
+ : sed -i -e '/python/d' sed -i -e '1,$s/hello/world/g' -f input file > out_file
+
+ ***ed 여려개 -e or ;, 파일 여러개 -f
+
+
+ Q7.
+  1) 5번째 줄 출력 (파일명 : file)
+ : sed -n '5p' file
+
+  2) python, Python 포함 줄 삭제 (파일명 : file) 
+ : sed -i '/[pP]ython/d' file
+
+  4) 각 줄에 첫 3글자 삭제 (파일명 : file)
+  : delete=$( cut -c1-c3 file )
+    sed -i '/$delete/d' file
+
+ Q8. image.jpg.1, image.jpg.2, image.jpg.3  >> image1.jpg, image2.jpg, image3.jpg
+ ****파일 이름 변경이므로 mv 사용
+ ****파일 이름 변경인지 파일 내용 변경인지 잘 보셈
+
+  : var=image
+    mv ${var}.jpg.[0-9] ${var}[0-9].jpg.3
+
+
+----------------------
+
+1) a-f까지 매칭 (정규 표현식을 이용한 패턴 매칭) - sed는 아니다 
+    : grep [a-f]
+
+   2) b나 ab 매칭 ## or을 사용해야하는가?
+    : grep '\(b\)1\a1'
+
+   3) 2번 + aaaaaab매칭 #100개
+    : grep '\(a\)*\b'
+
+   4) 모든 글자 매칭
+    : grep *
+
+   5) #으로 시작하는 문장 매칭
+    : grep '^#'
+
+   6) \으로 끝나는 문장 매칭
+    : grep '\$'
+
+   7) 대문자로 시작하지 않는 문장 매칭
+    : grep '^[^A-Z]'
+
+   8) 빈줄이 아닌 모든 줄 매칭
+    : grep '[^]^ $'
+
+   9) cookie나 cake 포함된 줄 매칭
+    : grep 'cookie | cake'
+
+   10) w. 매칭
+    : grep '*w\.*'
+
+Q2. 모든 파일의 내용에서 모음을 지우기
+    -> 원래 리눅스에서는 파일을 vi로 열지 않는 이상, shell에서 바로 파일 안의 내용 자체를 변경하지 못하므로, 파일 내용 자체를 변경하는 문제는 무조건 sed 생각하기 
+    (tr로 변경 가능하지 않냐,,,?)
+                             --> 모음을 대문자로 바꾸어라 같이 범위를 범위로 바꾸어라는 불가능
+                             --> 항상 변경하라는 문제를 보고 sed의 s와 tr(파일내용),mv(같은 디렉토리 안 파일 이름) 비교해서 염두에 두기
+                             ==> sed 는 파일 내용 변경 편하게 하고 싶을 때 사용한다고 생각해보자...
+    -> sed와 같은 정규 표현식은 grep과 같이 사용하는 경우가 많으니 항상 염두에 두고 있기
+    : '1,$s/[aeiou]//g'
+    = '/[aeiou]//s/g'  #g(global)는 플래그라서 마지막에 슬래쉬 붙이지 않기
+
+Q3. animals.txt에서 phython -> PYTHON 변경 후 파일 전체 동일한 이름으로 저장하기=덮어씌우기
+  : (원래 리눅스) tr 'python' 'PYTHON' < animals.txt | cat >! animals.txt
+  : (sed형태) sed -i '1,$s/python/PYTHON/g' animals.txt
+
+Q4. hello -> world (파일 명 : file)
+  : (원래 리눅스) tr 'hello' 'world' < file
+  : (sed 형태) sed '1,$s/hello/world/g' file
+  : 치환후 파일의 내용 출력 코드 (파이프라인 사용가능, 파일 명은 무조건 파이프 이전 명령과 함께) 
+  cat file | sed '1,$s/hello/world/g'
+
+Q5. python이 있는 라인만 출력해줘  
+   : sed -n '/python/p' file
+
+Q6. input_file에서 python으로 시작하는 라인 삭제하고, hello->world로 변경한 뒤, out_file에 저장하라
+   : (리눅스) XXXXXXXX #떠오르지가 않음 개 복잡한 것 같음 (애초에 단어랑 줄만 삭제가 있었나..?)
+   ---> 단어와 줄 삭제는 무조건 sed 사용하깅!!
+   : (sed 형태) sed -e '/^python/d' -e 's/hello/world/g' inputfile > out_file
+    = sed '/^python/d ; s/hello/world/g' inputfile > out_file
+
+  Q7.
+  1) 5번째 줄 출력 (파일명 : file)
+  : (리눅스) --> head는 다섯번째 줄 까지만 가능 ,특정 행은 출력 XXXXXx
+  : (sed 형태) sed -n '5p' file
+
+  2) python, Python 포함 줄 삭제 (파일명 : file)
+  : (리눅스) --> 특정 단어, 특정 행 삭제 불가능, 무조건 sed 이용하세용
+  : sed '/python | Python/d' file  #(delect에는 g flag 사용하면 안되나?)  #(or 기호 띄어쓰기 맞나?)
+
+  3) 처음 10개 줄 중 2번 실행 #근데 무슨 실행인데,,, 실행이니 히스토리 일려나ㅜ
+  : (리눅스) history | head -n10\{2\}
+  : (sed 형태) 안됨, sed는 특정 줄, 특정 단어 인듯 ^!^ 범위 삭제는 가능 (모음, 대문자...s를 이용해서 대체를 통해)
+
+  4) 각 줄에 첫 3글자 삭제 (파일명 : file)
+  : sed 'cut -c1-3/s///' file  #...?
+
+--> s가 약간 행별로 돌면서 대체 or 삭제 하는 느낌
+--> 헹별로 돌면서 라는 의미가 있으면 sed의 s를 먼저 생각해보자
+
+Q8. image.jpg.1, image.jpg.2, image.jpg.3 >> image1.jpg, image2.jpg, image3.jpg (파일명 변경인데 s 써도 되나?)
+ : (리눅스) mv */.jpg/.[0-9] *[0-9]/.jpg   #image는 고정 아닐까...?
+
+
+pdsq

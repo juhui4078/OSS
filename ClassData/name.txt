@@ -1,0 +1,3 @@
+Smith 33 Seoul
+James 35 Tokyo
+Juhui 23 Geoje
