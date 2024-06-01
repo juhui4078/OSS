@@ -44,17 +44,17 @@ if [ $# -eq 3 ]; then
       
     # 1일~30일 달인 경우  
     "Apr" | "Jun" | "Sep" | "Nov")
-    if [ $day -gt 0 ] && [ $day -le 30 ]; then
-      echo "$month $day $year"
-    else
-      # 윤년일 경우
-      if [ $var1 -eq 0 ] && [ $var2 -ne 0 ] || [ $var3 -eq 0 ]; then
-        echo "$year년은 윤년이고, 윤년인 $month의 경우 1일부터 30일까지 존재하므로, $month $day $year는 유효하지 않습니다"
-      # 평년일 경우  
+      if [ $day -gt 0 ] && [ $day -le 30 ]; then
+        echo "$month $day $year"
       else
-        echo "$year년은 평년이고, 평년인 $month의 경우 1일부터 30일까지 존재하므로, $month $day $year는 유효하지 않습니다"
-      fi  
-    fi
+        # 윤년일 경우
+        if [ $var1 -eq 0 ] && [ $var2 -ne 0 ] || [ $var3 -eq 0 ]; then
+          echo "$year년은 윤년이고, 윤년인 $month의 경우 1일부터 30일까지 존재하므로, $month $day $year는 유효하지 않습니다"
+        # 평년일 경우  
+        else
+          echo "$year년은 평년이고, 평년인 $month의 경우 1일부터 30일까지 존재하므로, $month $day $year는 유효하지 않습니다"
+        fi  
+      fi
     ;;
 
     # 2월인 경우
