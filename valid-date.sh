@@ -26,7 +26,7 @@ var1=$((year % 4))
 var2=$((year % 100))
 var3=$((year % 400))
 
-if [ $# -ne 3 ]; then
+if [ $# -eq 3 ]; then
   case $month in
     jan | january | 1) month="Jan" ;;
     feb | febuary | 2) month="Feb" ;;
@@ -42,7 +42,7 @@ if [ $# -ne 3 ]; then
     dec | december | 12) month="Dec" ;;
     *) echo "입력값 오류" ;;
   esac  
-
+  
   case $month in
     
     # 1일~31일 달인 경우 
@@ -52,10 +52,10 @@ if [ $# -ne 3 ]; then
       else
         # 윤년일 경우
         if [ $var1 -eq 0 ] && [ $var2 -ne 0 ] || [ $var3 -eq 0 ]; then
-          echo "$year은 윤년이고, 윤년인 $month의 경우 1일부터 31일까지 존재하므로, $1 $day $year은 유효하지 않습니다."
+          echo "$year은 윤년이고, 윤년인 $month의 경우 1일부터 31일까지 존재하므로, $month $day $year는 유효하지 않습니다."
         # 평년일 경우  
         else
-          echo "$year은 평년이고, 평년인 $month의 경우 1일부터 31일까지 존재하므로, $1 $day $year은 유효하지 않습니다."
+          echo "$year은 평년이고, 평년인 $month의 경우 1일부터 31일까지 존재하므로, $month $day $year는 유효하지 않습니다."
         fi  
       fi
       ;;
@@ -67,10 +67,10 @@ if [ $# -ne 3 ]; then
     else
       # 윤년일 경우
       if [ $var1 -eq 0 ] && [ $var2 -ne 0 ] || [ $var3 -eq 0 ]; then
-        echo "$year은 윤년이고, 윤년인 $month의 경우 1일부터 30일까지 존재하므로, $1 $day $year은 유효하지 않습니다."
+        echo "$year은 윤년이고, 윤년인 $month의 경우 1일부터 30일까지 존재하므로, $month $day $year는 유효하지 않습니다."
       # 평년일 경우  
       else
-        echo "$year은 평년이고, 평년인 $month의 경우 1일부터 30일까지 존재하므로, $1 $day $year은 유효하지 않습니다."
+        echo "$year은 평년이고, 평년인 $month의 경우 1일부터 30일까지 존재하므로, $month $day $year는 유효하지 않습니다."
       fi  
     fi
     ;;
@@ -82,14 +82,14 @@ if [ $# -ne 3 ]; then
         if [ $day -gt 0 ] && [ $day -le 29 ]; then
           echo "$month $day $year"
         else 
-          echo "$year은 윤년이고, 윤년인 $month의 경우 1일부터 29일까지 존재하므로, $1 $day $year은 유효하지 않습니다."
+          echo "$year은 윤년이고, 윤년인 $month의 경우 1일부터 29일까지 존재하므로, $month $day $year는 유효하지 않습니다."
         fi
       # 평년일 경우
       else
         if [ $day -gt 0 ] && [ $day -le 28 ]; then
           echo "$month $day $year"
         else
-          echo "$year은 평년이고, 평년인 $month의 경우 1일부터 28일까지 존재하므로, $1 $day $year은 유효하지 않습니다."
+          echo "$year은 평년이고, 평년인 $month의 경우 1일부터 28일까지 존재하므로, $month $day $year는 유효하지 않습니다."
         fi
       fi
       ;;
@@ -98,8 +98,7 @@ if [ $# -ne 3 ]; then
 
 else
   echo "입력값 오류"
+  exit
 fi  
-
-
 
 
