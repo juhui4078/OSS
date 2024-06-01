@@ -80,7 +80,7 @@ if [ $# -eq 3 ]; then
   esac  
 
 else
-  echo "입력값 오류"
+  echo "dd입력값 오류"
   exit 1
 fi  
 
