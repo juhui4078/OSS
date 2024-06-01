@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/sh
 # file-name: valid-date.sh
 
 # 입력값 : ./valid-date.sh may 27 2024
@@ -19,9 +19,9 @@
 
 # echo "Enter the month, day, and year: "
 
-read $1 $2 $3
-month="$1"
-day="$2" 
-year="$3"
+read month day year
+# month="$1"
+# day="$2" 
+# year="$3"
 
 echo $month $day $year
