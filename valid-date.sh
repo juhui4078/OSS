@@ -75,7 +75,6 @@ if [ $# -eq 3 ]; then
         fi
       fi
       ;;
-      *) ;;
       
   esac  
 
