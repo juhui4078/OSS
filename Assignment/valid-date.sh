@@ -17,7 +17,11 @@
 # 4. 각 달의 일 수를 설정한다. 윤년일 경우, 2월은 29일까지 존재한다
 # 5. 인수가 3개가 아닐 경우 종료 코드로 프로그램을 끝낸다. 
 
-echo "Enter the month, day, and year: "
-read month day year
+# echo "Enter the month, day, and year: "
+
+read $1 $2 $3
+month="$1"
+day="$2" 
+year="$3"
 
 echo $month $day $year
