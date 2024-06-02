@@ -25,6 +25,7 @@ if [ $# -eq 1 ]; then
     10) month="Oct" ;;
     11) month="Nov" ;;
     12) month="Dec" ;;
+    *) echo "입력값 오류" ;;
   esac
   
 else

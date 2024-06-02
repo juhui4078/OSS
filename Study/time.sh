@@ -35,17 +35,20 @@ if [ $# -eq 1 ]; then
 
   if [ "$hour" -gt 0 ] && [ "$hour" -le 9 ]; then
     echo "굿모닝"
+    exit 0
   elif [ "$hour" -gt 10 ] && [ "$hour" -le 17 ]; then
     echo "굿애프터눈"
+    exit 0 
   elif 
     [ "$hour" -gt 18 ] && [ "$hour" -le 24 ]; then
     echo "굿이브닝"
+    exit 0
   else
     echo "입력값 오류"
+    exit 1
   fi
-  exit 0
   
 else
   echo "입력값 오류"
-  exit 0
+  exit 1
 fi 
