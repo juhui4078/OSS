@@ -1,40 +1,18 @@
 ## Q. 이름 변수에 할당하고 빈값인지 확인하는 조건문 작성하기 (표현식 사용X)
 
-```
-name="김주희"
-if test "$name" = ' '
-  echo empty
-fi
-```
 
 ## Q. 위의 문제를 표현식으로 바꾸고 종료상태 확인하는 코드
 
-```
-name="김주희"
-if [ "$name" = ' ' ]
-  echo empty
-fi
-```
+
 ## Q. count라는 변수 원하는 숫자 넣고, 10보다 작은지 판별하는 조건문 작성
 
-```
-count=1
-if [ "$count" -lt 10 ]; then
-  echo true
-fi
-```
+
 ## Q2. 스크립트 : count
 전체인수가 0이 아닐때, "프로그램을 실행합니다" 라는 문구 출력하는 조건문 작성하기 
 (파일하나 만들어야함)- 종료 상태 확인하기
 
 ## Q.count라는 변수 원하는 숫자 넣고, 0보다 크거나 같고 10보다 작은지 판별하는 조건문 작성해서 보내기
 
-```
-count=1
-if [ "$count" -ge 0 ] && [ "$count" - lt 10 ]; then
-  echo "0~10"
-fi
-```
 
 # Q. 시간을 기준으로 인사하는 프로그램 만들기 (파일 이름은 원하는 대로 shell에 만들기)
 12-9시 굿모닝
@@ -57,41 +35,11 @@ fi
 
 
 ## Q. file을 정렬하고 file에 저장하라.
-  -> sort file1 -o file2
 
 ## Q. $file(파일)이 존재하지 않으면(empty,null) /etc/passwd를 변수 $file에 할당하라.
 
-  file="$1"
-
-  if [ ! -e "$file" ]
-    file="/etx/passwd"
-  else
-    echo "파일이 존재합니다."
-  fi  
-   
-  
-- 프로그램1 && 프로그램2 || 프로그램3
-  (1이 성공하면 2를 실행하고, 틀리면 3을 실행하라)
 
 ## Q. "$name(문자열)이 널값이 아니거나 $file(파일)이 읽기 가능할 경우" 
-
-name="example"
-file=example.txt
-
-if [ -n "$name" ] || [ -r "$file" ]; then
-
-else
-
-fi
-
-if [ -n "$name" -o -r "$file" ]; then
-
-else
-
-fi
-
-같은 의미
-
 
 ## 파일 비교
   - <옵션><파일>
