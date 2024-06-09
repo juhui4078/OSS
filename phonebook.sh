@@ -49,12 +49,6 @@ if [ ! -f "$PHONEBOOK_FILE" ];then
     touch "$PHONEBOOK_FILE"
 fi
 
-# 이미 저장된 이름인지 확인
-if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
-    echo "$NAME의 정보가 이미 phonebook.txt에 저장되어 있습니다."
-    exit 1
-fi
-
 # 성 추출
 LAST_NAME=$(echo "$NAME" | awk '{print $1}')
 
