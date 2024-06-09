@@ -61,14 +61,14 @@ fi
 
 # 이미 저장된 이름과 전화번호인지 확인하여 추가 안함
 if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
-    # 이미 저장된 이름이 있을 때 전화번호가 다른 경우 추가
-    if ! grep -q "^$NAME $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
+    # 이미 저장된 이름이 있을 때 동일한 전화번호가 있는지 확인
+    if grep -q "^$NAME .* $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
+        echo "이미 같은 전화번호가 존재합니다."
+        exit 1
+    else
         echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
         echo "새로운 전화번호가 추가되었습니다."
         exit 0
-    else
-        echo "이미 같은 전화번호가 존재합니다."
-        exit 1
     fi
 else
     # 새로운 항목 추가
