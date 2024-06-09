@@ -40,8 +40,8 @@ if grep -q "^$NAME $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
 fi
 
 # 이미 저장된 전화번호에 대한 이름 변경 확인
-if grep -q "^.* $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
-    read -p "입력한 전화번호($FORMATTED_PHONE_NUMBER)는 이미 phonebook.txt에 다른 이름으로 저장되어 있습니다. 이름을 변경하여 추가하시겠습니까? (y/n): " answer
+if grep -q " $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
+    read -p "입력한 전화번호($FORMATTED_PHONE_NUMBER)는 이미 phonebook.txt에 저장되어 있습니다. 다른 이름으로 추가하시겠습니까? (y/n): " answer
     if [ "$answer" == "y" ]; then
         read -p "새로운 이름을 입력하세요: " NEW_NAME
 
@@ -55,8 +55,6 @@ if grep -q "^.* $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
         echo "$NEW_NAME $FORMATTED_PHONE_NUMBER" >> "$PHONEBOOK_FILE"
         echo "새로운 이름($NEW_NAME)으로 전화번호가 변경되어 추가되었습니다."
         exit 0
-    else
-        exit 1
     fi
 fi
 
@@ -68,40 +66,11 @@ if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
     fi
 fi
 
-# 성 추출
-LAST_NAME=$(echo "$NAME" | awk '{print $1}')
-
-# 지역 구하기
-AREA_CODE="${FORMATTED_PHONE_NUMBER%%-*}"
-case "$AREA_CODE" in
-    "02")
-        AREA="서울"
-        ;;
-    "031")
-        AREA="경기"
-        ;;
-    "032")
-        AREA="인천"
-        ;;
-    "051")
-        AREA="부산"
-        ;;
-    "055")
-        AREA="거제"
-        ;;
-    "010")
-        AREA="개인 번호"
-        ;;
-    *)
-        AREA="알 수 없는 지역 번호"
-        ;;
-esac
-
 # 새로운 항목 추가
-echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
+echo "$NAME $FORMATTED_PHONE_NUMBER" >> "$PHONEBOOK_FILE"
 
 # 전화번호부 파일을 성을 기준으로 정렬
 LC_COLLATE=ko_KR.UTF-8 sort -t ' ' -k1,1 "$PHONEBOOK_FILE" > "$TEMP_FILE"
 mv "$TEMP_FILE" "$PHONEBOOK_FILE"
 
-echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
+echo "$NAME $FORMATTED_PHONE_NUMBER의 정보가 phonebook.txt에 추가 되었습니다."
