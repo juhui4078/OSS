@@ -46,7 +46,6 @@ fi
 
 # 지역 구하기
 AREA_CODE="${FORMATTED_PHONE_NUMBER%%-*}"
-AREA="알 수 없음"
 case "$AREA_CODE" in
     "02")
         AREA="서울"
@@ -63,7 +62,11 @@ case "$AREA_CODE" in
     "055")
         AREA="거제"
         ;;
+    "010")
+        AREA="개인 번호"
+        ;;
     *)
+        AREA="알 수 없는 지역 번호"
         ;;
 esac
 
@@ -71,6 +74,9 @@ esac
 if [ ! -f "$PHONEBOOK_FILE" ];then
     touch "$PHONEBOOK_FILE"
 fi
+
+# 기존 전화번호부 파일 복사하여 temp 파일에 저장
+cp "$PHONEBOOK_FILE" "$TEMP_FILE"
 
 # 기존 항목 수정 또는 새로운 항목 추가
 FOUND=0
@@ -81,7 +87,7 @@ while IFS= read -r line; do
 
     if [ "$ENTRY_NAME" == "$NAME" ]; then
         if [ "$ENTRY_PHONE_NUMBER" == "$FORMATTED_PHONE_NUMBER" ]; then
-            echo "$NAME $FORMATTED_PHONE_NUMBER $AREA가 이미 저장되어 있습니다."
+            echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 이미 저장되어 있습니다."
             exit 0
         else
             echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$TEMP_FILE"
@@ -99,4 +105,4 @@ fi
 # 전화번호부 파일 업데이트
 mv "$TEMP_FILE" "$PHONEBOOK_FILE"
 
-echo "$NAME $FORMATTED_PHONE_NUMBER $AREA 추가 또는 업데이트 완료."
+echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
