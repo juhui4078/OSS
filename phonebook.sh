@@ -56,23 +56,32 @@ esac
 
 # 전화번호부 파일이 없는 경우 생성
 if [ ! -f "$PHONEBOOK_FILE" ];then
-    touch "$PHONEBOOK_FㄴILE"
+    touch "$PHONEBOOK_FILE"
 fi
 
-# 이미 저장된 이름과 전화번호인지 확인하여 추가 안함
+# 전화번호부에 이름이 저장되어 있는 경우
 if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
-    # 이미 저장된 이름이 있을 때 전화번호가 다른 경우 추가
+    # 전화번호가 다른 경우 추가
     if ! grep -q "^$NAME $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
         echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
-        echo "새로운 전화번호가 추가되었습니다."
+        echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
         exit 0
+    # 전화번호가 같은 경우 추가하지 않기    
     else
-        echo "이미 같은 전화번호가 존재합니다."
+        echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 이미 phonebook.txt에 저장되어 있습니다."
         exit 1
     fi
+# 전화번호부에 이름이 저장되어 있지 않는 경우    
 else
     # 새로운 항목 추가
     echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
     echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
+
+    # 한글 성에 따라 정렬
+    LC_COLLATE=ko_KR.UTF-8 sort -k1,1 "$PHONEBOOK_FILE" > "$TEMP_FILE"
+    mv "$TEMP_FILE" "$PHONEBOOK_FILE"
+
     exit 0
 fi
+
+
