@@ -15,6 +15,7 @@
 #예: 홍길동 02-2222-2222 서울
 #- 지역번호는 자유롭게 구현하되 최소 5개 있을 것
 #- 제출: 깃허브 푸시 후 링크 제출
+#!/bin/bash
 
 PHONEBOOK_FILE="phonebook.txt"
 TEMP_FILE="temp_phonebook.txt"
@@ -36,11 +37,22 @@ fi
 
 # 전화번호에 하이픈 추가
 if [ ${#PHONE_NUMBER} -eq 10 ]; then
-    FORMATTED_PHONE_NUMBER="${PHONE_NUMBER:0:2}-${PHONE_NUMBER:2:4}-${PHONE_NUMBER:6:4}"
+    FORMATTED_PHONE_NUMBER="${PHONE_NUMBER:0:3}-${PHONE_NUMBER:3:4}-${PHONE_NUMBER:7:4}"
 elif [ ${#PHONE_NUMBER} -eq 11 ]; then
     FORMATTED_PHONE_NUMBER="${PHONE_NUMBER:0:3}-${PHONE_NUMBER:3:4}-${PHONE_NUMBER:7:4}"
 else
     echo "입력값 오류 : 전화번호는 10자리 또는 11자리여야 합니다."
+    exit 1
+fi
+
+# 전화번호부 파일이 없는 경우 생성
+if [ ! -f "$PHONEBOOK_FILE" ];then
+    touch "$PHONEBOOK_FILE"
+fi
+
+# 이미 저장된 이름인지 확인
+if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
+    echo "$NAME의 정보가 이미 phonebook.txt에 저장되어 있습니다."
     exit 1
 fi
 
@@ -70,39 +82,7 @@ case "$AREA_CODE" in
         ;;
 esac
 
-# 전화번호부 파일이 없는 경우 생성
-if [ ! -f "$PHONEBOOK_FILE" ];then
-    touch "$PHONEBOOK_FILE"
-fi
-
-# 기존 전화번호부 파일 복사하여 temp 파일에 저장
-cp "$PHONEBOOK_FILE" "$TEMP_FILE"
-
-# 기존 항목 수정 또는 새로운 항목 추가
-FOUND=0
-while IFS= read -r line; do
-    ENTRY_NAME="${line%% *}"
-    ENTRY_PHONE_NUMBER="${line#* }"
-    ENTRY_PHONE_NUMBER="${ENTRY_PHONE_NUMBER%% *}"
-
-    if [ "$ENTRY_NAME" == "$NAME" ]; then
-        if [ "$ENTRY_PHONE_NUMBER" == "$FORMATTED_PHONE_NUMBER" ]; then
-            echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 이미 저장되어 있습니다."
-            exit 0
-        else
-            echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$TEMP_FILE"
-            FOUND=1
-        fi
-    else
-        echo "$line" >> "$TEMP_FILE"
-    fi
-done < <(LC_COLLATE=ko_KR.UTF-8 sort -t ' ' -k1,1 "$PHONEBOOK_FILE")
-
-if [ "$FOUND" -eq 0 ]; then
-    echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$TEMP_FILE"
-fi
-
-# 전화번호부 파일 업데이트
-mv "$TEMP_FILE" "$PHONEBOOK_FILE"
+# 새로운 항목 추가
+echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
 
 echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
