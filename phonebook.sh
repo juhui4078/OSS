@@ -12,35 +12,6 @@ fi
 NAME="$1"
 PHONE_NUMBER="$2"
 
-# 성 추출
-LAST_NAME=$(echo "$NAME" | awk '{print $1}')
-
-# 지역 구하기
-AREA_CODE="${FORMATTED_PHONE_NUMBER%%-*}"
-case "$AREA_CODE" in
-    "02")
-        AREA="서울"
-        ;;
-    "031")
-        AREA="경기"
-        ;;
-    "032")
-        AREA="인천"
-        ;;
-    "051")
-        AREA="부산"
-        ;;
-    "055")
-        AREA="거제"
-        ;;
-    "010")
-        AREA="개인 번호"
-        ;;
-    *)
-        AREA="알 수 없는 지역 번호"
-        ;;
-esac
-
 # 전화번호 숫자 판별
 if ! [[ "$PHONE_NUMBER" =~ ^[0-9]+$ ]]; then
     echo "입력값 오류 : 전화번호는 숫자만 입력 가능합니다."
@@ -49,7 +20,7 @@ fi
 
 # 전화번호에 하이픈 추가
 if [ ${#PHONE_NUMBER} -eq 10 ]; then
-    FORMATTED_PHONE_NUMBER="${PHONE_NUMBER:0:3}-${PHONE_NUMBER:3:4}-${PHONE_NUMBER:7:4}"
+    FORMATTED_PHONE_NUMBER="010-${PHONE_NUMBER:0:4}-${PHONE_NUMBER:4:4}"
 elif [ ${#PHONE_NUMBER} -eq 11 ]; then
     FORMATTED_PHONE_NUMBER="${PHONE_NUMBER:0:3}-${PHONE_NUMBER:3:4}-${PHONE_NUMBER:7:4}"
 else
@@ -96,6 +67,35 @@ if grep -q " $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
         exit 1
     fi
 fi
+
+# 성 추출
+LAST_NAME=$(echo "$NAME" | awk '{print $1}')
+
+# 지역 구하기
+AREA_CODE="${FORMATTED_PHONE_NUMBER%%-*}"
+case "$AREA_CODE" in
+    "02")
+        AREA="서울"
+        ;;
+    "031")
+        AREA="경기"
+        ;;
+    "032")
+        AREA="인천"
+        ;;
+    "051")
+        AREA="부산"
+        ;;
+    "055")
+        AREA="거제"
+        ;;
+    "010")
+        AREA="개인 번호"
+        ;;
+    *)
+        AREA="알 수 없는 지역 번호"
+        ;;
+esac
 
 # 새로운 항목 추가
 echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
