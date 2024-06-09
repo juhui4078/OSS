@@ -55,6 +55,28 @@ if grep -q "^$NAME $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
     exit 1
 fi
 
+# 이미 저장된 전화번호에 대한 이름 변경 확인
+if grep -q "^.* $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
+    echo "입력한 전화번호($FORMATTED_PHONE_NUMBER)는 이미 phonebook.txt에 다른 이름으로 저장되어 있습니다."
+    read -p "이름을 변경하시겠습니까? (y/n): " answer
+    if [ "$answer" == "y" ]; then
+        read -p "새로운 이름을 입력하세요: " NEW_NAME
+
+        # 사용자가 새로운 이름을 입력하지 않은 경우
+        if [ -z "$NEW_NAME" ]; then
+            echo "입력값 오류 : 새로운 이름을 입력해야 합니다."
+            exit 1
+        fi
+
+        # 새로운 항목 추가
+        echo "$NEW_NAME $FORMATTED_PHONE_NUMBER" >> "$PHONEBOOK_FILE"
+        echo "새로운 이름($NEW_NAME)으로 전화번호가 변경되었습니다."
+        exit 0
+    else
+        exit 1
+    fi
+fi
+
 # 이미 저장된 이름인지 확인
 if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
     echo "입력한 이름($NAME)은 이미 phonebook.txt에 저장되어 있습니다."
