@@ -15,7 +15,6 @@
 #예: 홍길동 02-2222-2222 서울
 #- 지역번호는 자유롭게 구현하되 최소 5개 있을 것
 #- 제출: 깃허브 푸시 후 링크 제출
-#!/bin/bash
 
 PHONEBOOK_FILE="phonebook.txt"
 TEMP_FILE="temp_phonebook.txt"
@@ -56,6 +55,9 @@ if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
     exit 1
 fi
 
+# 성 추출
+LAST_NAME=$(echo "$NAME" | awk '{print $1}')
+
 # 지역 구하기
 AREA_CODE="${FORMATTED_PHONE_NUMBER%%-*}"
 case "$AREA_CODE" in
@@ -84,5 +86,9 @@ esac
 
 # 새로운 항목 추가
 echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
+
+# 전화번호부 파일을 성을 기준으로 정렬
+LC_COLLATE=ko_KR.UTF-8 sort -t ' ' -k1,1 "$PHONEBOOK_FILE" > "$TEMP_FILE"
+mv "$TEMP_FILE" "$PHONEBOOK_FILE"
 
 echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
