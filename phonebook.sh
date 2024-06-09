@@ -33,8 +33,8 @@ if [ ! -f "$PHONEBOOK_FILE" ];then
     touch "$PHONEBOOK_FILE"
 fi
 
-# 이미 저장된 이름과 전화번호인지 확인
-if grep -q "^$NAME $FORMATTED_PHONE_NUMBER$" "$PHONEBOOK_FILE"; then
+# 이미 저장된 이름과 전화번호인지 확인하여 추가 안함
+if grep -q "^$NAME $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
     echo "입력한 이름($NAME)과 전화번호($FORMATTED_PHONE_NUMBER)는 이미 phonebook.txt에 저장되어 있습니다."
     exit 1
 fi
