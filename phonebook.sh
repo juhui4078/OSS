@@ -28,10 +28,7 @@ else
     exit 1
 fi
 
-# 성 추출
-LAST_NAME=$(echo "$NAME" | awk '{print $1}')
-
-# 지역 구하기
+# 지역번호 구하기
 AREA_CODE="${FORMATTED_PHONE_NUMBER%%-*}"
 case "$AREA_CODE" in
     "02")
@@ -63,45 +60,19 @@ if [ ! -f "$PHONEBOOK_FILE" ];then
 fi
 
 # 이미 저장된 이름과 전화번호인지 확인하여 추가 안함
-if grep -q "^$NAME $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
-    echo "입력한 이름($NAME)과 전화번호($FORMATTED_PHONE_NUMBER)는 이미 $NAME $FORMATTED_PHONE_NUMBER $AREA로 phonebook.txt에 저장되어 있습니다."
-    exit 1
-fi
-
-# 이미 저장된 이름인지 확인
 if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
-    read -p "입력한 이름($NAME)은 이미 $FORMATTED_PHONE_NUMBER $AREA로 phonebook.txt에 저장되어 있습니다. 그래도 추가하시겠습니까? (y/n): " answer
-    if [ "$answer" != "y" ]; then
-        exit 1
-    fi
-fi
-
-# 이미 저장된 전화번호인지 확인
-if grep -q " $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
-    read -p "입력한 전화번호($FORMATTED_PHONE_NUMBER)는 이미 $FORMATTED_PHONE_NUMBER $AREA로 phonebook.txt에 저장되어 있습니다. 다른 이름으로 추가하시겠습니까? (y/n): " answer
-    if [ "$answer" == "y" ]; then
-        read -p "새로운 이름을 입력하세요: " NEW_NAME
-
-        # 사용자가 새로운 이름을 입력하지 않은 경우
-        if [ -z "$NEW_NAME" ]; then
-            echo "입력값 오류 : 새로운 이름을 입력해야 합니다."
-            exit 1
-        fi
-
-        # 새로운 항목 추가
-        echo "$NEW_NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
-        echo "새로운 이름($NEW_NAME)으로 전화번호가 변경되어 추가되었습니다."
+    # 이미 저장된 이름이 있을 때 전화번호가 다른 경우 추가
+    if ! grep -q "^$NAME $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
+        echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
+        echo "새로운 전화번호가 추가되었습니다."
         exit 0
     else
+        echo "이미 같은 전화번호가 존재합니다."
         exit 1
     fi
+else
+    # 새로운 항목 추가
+    echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
+    echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
+    exit 0
 fi
-
-# 새로운 항목 추가
-echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$PHONEBOOK_FILE"
-
-# 전화번호부 파일을 성을 기준으로 정렬
-LC_COLLATE=ko_KR.UTF-8 sort -t ' ' -k1,1 "$PHONEBOOK_FILE" > "$TEMP_FILE"
-mv "$TEMP_FILE" "$PHONEBOOK_FILE"
-
-echo "$NAME $FORMATTED_PHONE_NUMBER $AREA의 정보가 phonebook.txt에 추가 되었습니다."
