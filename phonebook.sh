@@ -1,21 +1,5 @@
 #!/bin/bash
 
-#전화번호부 관리 스크립트를 작성한다.
-#- 파일 실행 스크립트: 프로그램 + 이름 + 전화번호
-#- 프로그램 내용:
-#- 검색: 입력된 이름으로 전화번호부를 검색한다.
-#- 존재하면 전화번호 비교한다. 동일하면 메시지 프린트하고 프로그램 종료
-#- 다르면 새로운 전화번호로 추가하고 이름순으로 정렬한다.
-#- 잘못된 입력값 판별하기
-#- 번호가 숫자일 경우만 실행한다.
-#- 전화번호는 하이픈(-)으로 연결해서 저장한다.
-#- 인수는 2개 전달되어야 함. 종료 코드 설정할 것
-#- 지역번호 구현하기
-#- 전화번호를 저장할 때 지역번호에 따라 "이름 전화번호 지역" 으로 저장한다.
-#예: 홍길동 02-2222-2222 서울
-#- 지역번호는 자유롭게 구현하되 최소 5개 있을 것
-#- 제출: 깃허브 푸시 후 링크 제출
-
 PHONEBOOK_FILE="phonebook.txt"
 TEMP_FILE="temp_phonebook.txt"
 
@@ -57,25 +41,28 @@ fi
 
 # 이미 저장된 전화번호에 대한 이름 변경 확인
 if grep -q "^.* $FORMATTED_PHONE_NUMBER " "$PHONEBOOK_FILE"; then
-    echo "입력한 전화번호($FORMATTED_PHONE_NUMBER)는 이미 phonebook.txt에 다른 이름으로 저장되어 있습니다."
-    read -p "새로운 이름을 입력하세요: " NEW_NAME
+    read -p "입력한 전화번호($FORMATTED_PHONE_NUMBER)는 이미 phonebook.txt에 다른 이름으로 저장되어 있습니다. 이름을 변경하여 추가하시겠습니까? (y/n): " answer
+    if [ "$answer" == "y" ]; then
+        read -p "새로운 이름을 입력하세요: " NEW_NAME
 
-    # 사용자가 새로운 이름을 입력하지 않은 경우
-    if [ -z "$NEW_NAME" ]; then
-        echo "입력값 오류 : 새로운 이름을 입력해야 합니다."
+        # 사용자가 새로운 이름을 입력하지 않은 경우
+        if [ -z "$NEW_NAME" ]; then
+            echo "입력값 오류 : 새로운 이름을 입력해야 합니다."
+            exit 1
+        fi
+
+        # 새로운 항목 추가
+        echo "$NEW_NAME $FORMATTED_PHONE_NUMBER" >> "$PHONEBOOK_FILE"
+        echo "새로운 이름($NEW_NAME)으로 전화번호가 변경되어 추가되었습니다."
+        exit 0
+    else
         exit 1
     fi
-
-    # 새로운 항목 추가
-    echo "$NEW_NAME $FORMATTED_PHONE_NUMBER" >> "$PHONEBOOK_FILE"
-    echo "새로운 이름($NEW_NAME)으로 전화번호가 변경되었습니다."
-    exit 0
 fi
 
 # 이미 저장된 이름인지 확인
 if grep -q "^$NAME " "$PHONEBOOK_FILE"; then
-    echo "입력한 이름($NAME)은 이미 phonebook.txt에 저장되어 있습니다."
-    read -p "그래도 추가하시겠습니까? (y/n): " answer
+    read -p "입력한 이름($NAME)은 이미 phonebook.txt에 저장되어 있습니다. 그래도 추가하시겠습니까? (y/n): " answer
     if [ "$answer" != "y" ]; then
         exit 1
     fi
