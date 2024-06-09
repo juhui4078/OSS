@@ -100,7 +100,7 @@ done < <(LC_COLLATE=ko_KR.UTF-8 sort -t ' ' -k1,1 "$PHONEBOOK_FILE")
 
 if [ "$FOUND" -eq 0 ]; then
     echo "$NAME $FORMATTED_PHONE_NUMBER $AREA" >> "$TEMP_FILE"
-fi ㄴ
+fi
 
 # 전화번호부 파일 업데이트
 mv "$TEMP_FILE" "$PHONEBOOK_FILE"
