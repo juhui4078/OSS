@@ -5,7 +5,7 @@ TEMP_FILE="temp_phonebook.txt"
 
 # 입력값 검증
 if [ "$#" -ne 2 ]; then
-    echo "입력값 오류"
+    echo -e "입력값 오류\n: 이름과 전화번호를 순서대로 입력해야 합니다.\n전화번호는 띄어쓰기와 하이픈을 포함하지 않고 입력해야 합니다."
     exit 1
 fi
 
